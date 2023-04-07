@@ -37,19 +37,23 @@ async def music(id: str):
             'ids': id,
         }
     )
-    name = detail.json()['songs'][0]['name']+' '+detail.json()['songs'][0]['ar'][0]['name']
+    name = detail.json()['songs'][0]['name']
     response = requests.get(
         url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
         params={
             'key': name,
             'pn': 1,
-            'rn': 1,
+            'rn': 10,
             'httpsStatus': 1,
             'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
         },
         headers=headers
     )
-    rid = response.json()['data']['list'][0]['rid']
+    song_list = response.json()['data']['list']
+    for song in song_list:
+        if song['name']==detail.json()['songs'][0]['name'] and detail.json()['songs'][0]['ar'][0]['name'] in song['artist']:
+            rid = song['rid']
+            break
     urll = requests.get(
         url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
     )
