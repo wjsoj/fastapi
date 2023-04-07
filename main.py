@@ -37,7 +37,7 @@ async def music(id: str):
             'ids': id,
         }
     )
-    name = detail.json()['songs'][0]['name']+' '+detail.json()['songs'][0]['ar'][0]['name']+' '+detail.json()['songs'][0]['al']['name']
+    name = detail.json()['songs'][0]['name']+' '+detail.json()['songs'][0]['ar'][0]['name']
     response = requests.get(
         url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
         params={
