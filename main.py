@@ -31,30 +31,24 @@ async def root():
 
 @app.get("/music")
 async def music(id: str):
-    try:
-        detail = requests.get(
-            url='https://netease-api.wjsphy.top//song/detail',
-            params={
-                'ids': id,
-            }
-        )
-    except:
-        return {'message':'error'}
+    detail = requests.get(
+        url='https://netease-api.wjsphy.top//song/detail',
+        params={
+            'ids': id,
+        }
+    )
     name = detail.json()['songs'][0]['name']
-    try:
-        response = requests.get(
-            url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
-            params={
-                'key': name,
-                'pn': 1,
-                'rn': 10,
-                'httpsStatus': 1,
-                'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
-            },
-            headers=headers
-        )
-    except:
-        return {'message':'error'}
+    response = requests.get(
+        url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
+        params={
+            'key': name,
+            'pn': 1,
+            'rn': 10,
+            'httpsStatus': 1,
+            'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
+        },
+        headers=headers
+    )
     song_list = response.json()['data']['list']
     rid = None
     for song in song_list:
@@ -63,11 +57,8 @@ async def music(id: str):
             break
     if rid is None:
         rid = song_list[0]['rid']
-    try:
-        urll = requests.get(
-            url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
-        )
-    except:
-        return {'message':'error'}
+    urll = requests.get(
+        url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
+    )
     # print(urll.json()['data']['url'])
     return urll.json()['data']['url']
