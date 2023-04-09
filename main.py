@@ -29,7 +29,7 @@ async def music(name: str,artist: str):
         params={
             'key': name,
             'pn': 1,
-            'rn': 10,
+            'rn': 20,
             'httpsStatus': 1,
             'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
         },
