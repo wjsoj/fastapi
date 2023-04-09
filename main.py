@@ -30,14 +30,7 @@ async def root():
     return {"message": "Hello World. Welcome to FastAPI!"}
 
 @app.get("/music")
-async def music(id: str):
-    detail = requests.get(
-        url='https://netease-api.wjsphy.top//song/detail',
-        params={
-            'ids': id,
-        }
-    )
-    name = detail.json()['songs'][0]['name']
+async def music(name: str,artist: str):
     response = requests.get(
         url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
         params={
@@ -52,7 +45,7 @@ async def music(id: str):
     song_list = response.json()['data']['list']
     rid = None
     for song in song_list:
-        if song['name']==detail.json()['songs'][0]['name'] and detail.json()['songs'][0]['ar'][0]['name'] in song['artist']:
+        if song['name']==name and artist in song['artist']:
             rid = song['rid']
             break
     if rid is None:
