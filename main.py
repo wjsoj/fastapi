@@ -10,16 +10,9 @@ headers = {
 }
 app = FastAPI()
 
-origins = [
-    "http://music.wjsphy.top",
-    "https://music.wjsphy.top",
-    "http://localhost",
-    "http://localhost:20201",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
