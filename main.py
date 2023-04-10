@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import requests
+import json
 headers = {
     'Cookie': '_ga=GA1.2.387593542.1617107630; _gid=GA1.2.1534665002.1617107630; Hm_lvt_cdb524f42f0ce19b169a8071123a4797=1617107630,1617109657; Hm_lpvt_cdb524f42f0ce19b169a8071123a4797=1617110185; kw_token=QUE6LY91RKT',
     'csrf': 'QUE6LY91RKT',
@@ -24,6 +25,10 @@ async def root():
 
 @app.get("/music")
 async def music(name: str,artist: str):
+    with open('music.json','r',encoding='utf-8') as f:
+        dic = json.load(f)
+    if name+' '+artist in dic:
+        return dic[name+' '+artist]
     response = requests.get(
         url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
         params={
@@ -59,6 +64,9 @@ async def music(name: str,artist: str):
                 break
         if rid is None:
             rid = song_list[0]['rid']
+    dic[name+' '+artist] = rid
+    with open('music.json','w',encoding='utf-8') as f:
+        json.dump(dic, f, ensure_ascii=False, indent=4)
     urll = requests.get(
         url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
     )
