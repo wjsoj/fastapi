@@ -28,7 +28,11 @@ async def music(name: str,artist: str):
     with open('music.json','r',encoding='utf-8') as f:
         dic = json.load(f)
     if name+' '+artist in dic:
-        return dic[name+' '+artist]
+        rid = dic[name+' '+artist]
+        urll = requests.get(
+            url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
+        )
+        return urll.json()['data']['url']
     response = requests.get(
         url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
         params={
