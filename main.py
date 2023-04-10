@@ -29,7 +29,7 @@ async def music(name: str,artist: str):
         params={
             'key': name,
             'pn': 1,
-            'rn': 20,
+            'rn': 5,
             'httpsStatus': 1,
             'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
         },
@@ -42,7 +42,23 @@ async def music(name: str,artist: str):
             rid = song['rid']
             break
     if rid is None:
-        rid = song_list[0]['rid']
+        response = requests.get(
+            url='http://www.kuwo.cn/api/www/search/searchMusicBykeyWord',
+            params={
+                'key': name+artist,
+                'pn': 1,
+                'rn': 10,
+                'httpsStatus': 1,
+                'reqId': 'f0830500-9158-11eb-b0a1-83f9d69777f7'
+            },
+            headers=headers
+        )
+        for song in song_list:
+            if song['name']==name and artist in song['artist']:
+                rid = song['rid']
+                break
+        if rid is None:
+            rid = song_list[0]['rid']
     urll = requests.get(
         url=f'http://www.kuwo.cn/api/v1/www/music/playUrl?mid={rid}&type=url&httpsStatus=1',
     )
